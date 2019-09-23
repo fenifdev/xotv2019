@@ -19,6 +19,10 @@ class CreateVideosTable extends Migration
             $table->string('size'); //Need to refactor to a decimal.
             $table->unsignedBigInteger('viewers');
             $table->timestamps();
+
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onDelete('cascade');
         });
     }
 
