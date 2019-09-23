@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Video::class, function (Faker $faker) {
     return [
         'user_id' => 1,
-        'size' => $this->faker->randomNumber(4),
+        'size' => $this->faker->randomFloat(2, null, 8),
         'viewers' => $this->faker->randomNumber(4),
     ];
 });

@@ -16,7 +16,8 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('size'); //Need to refactor to a decimal.
+            //$table->string('size'); //Need to refactor to a decimal.
+            $table->decimal('size', 8, 2);
             $table->unsignedBigInteger('viewers');
             $table->timestamps();
 
