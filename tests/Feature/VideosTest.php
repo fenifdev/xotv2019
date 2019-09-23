@@ -20,11 +20,11 @@ class VideosTest extends TestCase
         $videos = factory('App\Video', 3)->create(['user_id' => $user->id]);
         # Get endpoint
         $response = $this->get('/api/total_videos_size_by_user?username='.$user->username);
-        # assert that returns true
-        $response->assertStatus(200);
-        # assert that see te total video size created by the user.
+
         $total = $videos->sum(['size']);
-        $response->assertSee($total);
+        # assert that returns true
+        $response->assertStatus(200)
+                ->assertSee($total);
     }
 
     /** @test */
@@ -73,7 +73,8 @@ class VideosTest extends TestCase
         # get the endpoing without video id
         $response = $this->get('/api/videos/1/metadata');
         # Asserts return an error
-        $response->assertStatus(404);
+        $response->assertStatus(400)
+                ->assertSee('Not Found');
     }
 
     /** @test */
@@ -86,10 +87,9 @@ class VideosTest extends TestCase
         $video = factory('App\Video')->create(['user_id' => $user->id]);
         # patch the endpoint
         $response = $this->patch('/api/videos/'.$video->id.'/metadata', ['size' => 1, 'viewers' => 1]);
-        //$response = $this->json('POST', '/user', ['name' => 'Sally']);
-        $response->assertStatus(200);
-        # asserts return the video with new metadata
-        $response->assertSee(1);
+
+        $response->assertStatus(200)
+                ->assertSee(1);
     }
 
     /** @test */
@@ -98,7 +98,8 @@ class VideosTest extends TestCase
         #Patch to endpoint without video_id
         $response = $this->patch('/api/videos/1/metadata', ['size' => 1, 'viewers' => 1]);
         # Asserts return an error.
-        $response->assertStatus(404);
+        $response->assertStatus(400)
+                ->assertSee('Not Found');
     }
 
     /** @test */
@@ -121,6 +122,7 @@ class VideosTest extends TestCase
         #Patch to endpoint without video_id
         $response = $this->patch('/api/videos/1/metadata', ['size' => 1, 'viewers' => 1]);
         # Asserts return an error.
-        $response->assertStatus(404);
+        $response->assertStatus(400)
+                ->assertSee('Not Found');
     }
 }

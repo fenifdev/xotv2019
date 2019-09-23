@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Video;
 use Illuminate\Http\Request;
+use App\Http\Resources\VideoResource as VideoResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class VideosController extends Controller
 {
@@ -28,10 +30,14 @@ class VideosController extends Controller
 
     public function video_metadata()
     {
-        $video = Video::findOrFail(request()->id_video);
+        try {
+            $video = Video::findOrFail(request()->id_video);
+        } catch (ModelNotFoundException $ex) {
+            $response_data['errors'] = 'Not Found';
+            return response()->json($response_data, 400);
+        }
 
-        # return metadata
-        return $video;
+        return new VideoResource($video);
     }
 
     public function update_video_metadata()
@@ -43,7 +49,13 @@ class VideosController extends Controller
         }
 
         #Get video
-        $video = Video::findOrFail(request()->id_video);
+        try {
+            $video = Video::findOrFail(request()->id_video);
+        } catch (ModelNotFoundException $ex) {
+            $response_data['errors'] = 'Not Found';
+            return response()->json($response_data, 400);
+        }
+
 
         # Update meta data
         if (request()->has('size')) {
