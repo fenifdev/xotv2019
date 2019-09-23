@@ -14,5 +14,6 @@ use Illuminate\Http\Request;
 */
 
 Route::get('total_videos_size_by_user', 'VideosController@total_videos_size_by_user');
-Route::get('get_video_metadata', 'VideosController@video_metadata');
-Route::patch('update_video_metadata', 'VideosController@update_video_metadata');
+Route::get('videos/{id_video}/metadata', 'VideosController@video_metadata');
+Route::patch('videos/{id_video}/metadata', 'VideosController@update_video_metadata');
+//Route::patch('update_video_metadata', 'VideosController@update_video_metadata');

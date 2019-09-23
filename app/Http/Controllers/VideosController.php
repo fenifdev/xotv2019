@@ -28,15 +28,7 @@ class VideosController extends Controller
 
     public function video_metadata()
     {
-        # Validates has video_id
-        $validator = \Validator::make(request()->all(), ['id_video' => 'required']);
-
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()], 422);
-        }
-
-        # Get video
-        $video = Video::find(request()->id_video)->firstOrFail();
+        $video = Video::findOrFail(request()->id_video);
 
         # return metadata
         return $video;
@@ -44,15 +36,14 @@ class VideosController extends Controller
 
     public function update_video_metadata()
     {
-        # Validates has video_id
-        $validator = \Validator::make(request()->all(), ['id_video' => 'required', 'viewers' => 'sometimes|integer']);
+        $validator = \Validator::make(request()->all(), ['viewers' => 'sometimes|integer']);
 
         if ($validator->fails()) {
             return response()->json(['errors'=>$validator->errors()], 422);
         }
 
         #Get video
-        $video = Video::find(request()->id_video)->firstOrFail();
+        $video = Video::findOrFail(request()->id_video);
 
         # Update meta data
         if (request()->has('size')) {

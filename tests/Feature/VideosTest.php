@@ -60,7 +60,7 @@ class VideosTest extends TestCase
         # Create a video
         $video = factory('App\Video')->create(['user_id' => $user->id]);
         # Get endpoint
-        $response = $this->get('/api/get_video_metadata?id_video='.$video->id);
+        $response = $this->get('/api/videos/'.$video->id.'/metadata');
         # Asserts it see the metadata
         $response->assertSee($video->size);
     }
@@ -70,12 +70,10 @@ class VideosTest extends TestCase
     {
         # Create a user
         $user = factory('App\User')->create();
-        # Create a video
-        $video = factory('App\Video')->create(['user_id' => $user->id]);
         # get the endpoing without video id
-        $response = $this->get('/api/get_video_metadata?id_video=');
+        $response = $this->get('/api/videos/1/metadata');
         # Asserts return an error
-        $response->assertStatus(422);
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -87,7 +85,7 @@ class VideosTest extends TestCase
         # Create a video
         $video = factory('App\Video')->create(['user_id' => $user->id]);
         # patch the endpoint
-        $response = $this->patch('/api/update_video_metadata/?id_video='.$video->id, ['size' => 1, 'viewers' => 1]);
+        $response = $this->patch('/api/videos/'.$video->id.'/metadata', ['size' => 1, 'viewers' => 1]);
         //$response = $this->json('POST', '/user', ['name' => 'Sally']);
         $response->assertStatus(200);
         # asserts return the video with new metadata
@@ -98,9 +96,9 @@ class VideosTest extends TestCase
     public function update_meta_data_requires_video_id()
     {
         #Patch to endpoint without video_id
-        $response = $this->patch('/api/update_video_metadata/?id_video=', ['size' => 1, 'viewers' => 1]);
+        $response = $this->patch('/api/videos/1/metadata', ['size' => 1, 'viewers' => 1]);
         # Asserts return an error.
-        $response->assertStatus(422);
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -112,7 +110,7 @@ class VideosTest extends TestCase
         # Create a video
         $video = factory('App\Video')->create(['user_id' => $user->id]);
         #Patch to endpoint without video_id
-        $response = $this->patch('/api/update_video_metadata/?id_video='.$video->id, ['size' => 1, 'viewers' => 'asas']);
+        $response = $this->patch('/api/videos/'.$video->id.'/metadata', ['size' => 1, 'viewers' => 'aaa']);
         # Asserts return an error.
         $response->assertStatus(422);
     }
@@ -121,8 +119,8 @@ class VideosTest extends TestCase
     public function only_a_existing_video_can_get_updated()
     {
         #Patch to endpoint without video_id
-        $response = $this->patch('/api/update_video_metadata/?id_video=', ['size' => 1, 'viewers' => 1]);
+        $response = $this->patch('/api/videos/1/metadata', ['size' => 1, 'viewers' => 1]);
         # Asserts return an error.
-        $response->assertStatus(422);
+        $response->assertStatus(404);
     }
 }
