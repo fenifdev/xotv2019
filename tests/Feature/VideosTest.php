@@ -104,6 +104,20 @@ class VideosTest extends TestCase
     }
 
     /** @test */
+    public function update_meta_data_requires_viewers_to_be_integer()
+    {
+        $this->withoutExceptionHandling();
+        # Create a user
+        $user = factory('App\User')->create();
+        # Create a video
+        $video = factory('App\Video')->create(['user_id' => $user->id]);
+        #Patch to endpoint without video_id
+        $response = $this->patch('/api/update_video_metadata/?id_video='.$video->id, ['size' => 1, 'viewers' => 'asas']);
+        # Asserts return an error.
+        $response->assertStatus(422);
+    }
+
+    /** @test */
     public function only_a_existing_video_can_get_updated()
     {
         #Patch to endpoint without video_id
